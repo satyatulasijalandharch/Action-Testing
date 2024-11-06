@@ -4,16 +4,16 @@ author: 'Satya Tulasi Jalandhar C H'
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Provide the milliseconds to wait'
+  GITHUB_TOKEN:
+    type: string
+    description: "GitHub token used for API authentication. Use secrets.GITHUB_TOKEN"
     required: true
-    default: '1000'
 
 # Define your outputs here.
 outputs:
-  time:
-    description: 'Your output description here'
+  github-token:
+    description: 'GitHub token'
 
 runs:
-  using: node20
+  using: node22
   main: dist/index.js

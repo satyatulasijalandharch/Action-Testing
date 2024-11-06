@@ -1,26 +1,37 @@
 const core = require('@actions/core')
-const { wait } = require('./wait')
-
+const github = require('@actions/github')
+const { Octokit } = require('@octokit/rest')
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 async function run() {
   try {
-    const ms = core.getInput('milliseconds', { required: true })
+    const githubToken = core.getInput('GITHUB_TOKEN', { required: true })
+    const octokit = new Octokit({ auth: githubToken });
 
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(`Waiting ${ms} milliseconds ...`)
+    const workflowRun = await octokit.rest.actions.getWorkflowRun({
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      run_id: github.context.runId
+    });
 
-    // Log the current timestamp, wait, then log the new timestamp
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    const WorkflowRun = workflowRun.data;
+    const commitMessage = WorkflowRun.head_repository.html_url+"/commit/"+WorkflowRun.head_sha
 
-    // Set outputs for other workflow steps to use
-    core.setOutput('time', new Date().toTimeString())
+    // console.log("Workflow Run Data:", WorkflowRun)
+    console.log("Workflow Name:", WorkflowRun.name)
+    console.log("Event:", WorkflowRun.event.toUpperCase())
+    console.log("Status:", WorkflowRun.status.toUpperCase())
+    console.log("Run Number:", WorkflowRun.run_number)
+    console.log("Avatar URL:", WorkflowRun.actor.avatar_url)
+    console.log("Author:", WorkflowRun.head_commit.author.name)
+    console.log("Repository Name:", WorkflowRun.head_repository.full_name)
+    console.log("Review Commit URL:", commitMessage)
+    console.log("Commit Message:", WorkflowRun.head_commit.message)
+
+    // core.setOutput('github-token', githubToken)
   } catch (error) {
-    // Fail the workflow run if an error occurs
     core.setFailed(error.message)
   }
 }

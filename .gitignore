@@ -136,3 +136,6 @@ build/
 tmp/
 temp/
 out/
+
+# Testing
+output.txt
