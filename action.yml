@@ -1,20 +1,23 @@
-name: 'Action Test'
-description: 'Tesing the action'
-author: 'Satya Tulasi Jalandhar C H'
+name: "Microsoft Teams Action"
+description: "Send notifications to Microsoft Teams"
+author: "Satya Tulasi Jalandhar C H"
 
-# Define your inputs here.
 inputs:
   GITHUB_TOKEN:
     type: string
     description: "GitHub token used for API authentication. Use secrets.GITHUB_TOKEN"
     required: true
-
-# Define your outputs here.
-outputs:
-  CommitMessage:
-    description: 'Commit Message'
+  WEBHOOK_URI:
+    type: string
+    description: "Microsoft Teams Webhook URL"
+    required: true
+  DEBUG:
+    type: boolean
+    description: "Debug mode"
+    required: false
 
 runs:
   using: node20
   main: dist/index.js
   post: dist/index.js
+  post-if: "always()"

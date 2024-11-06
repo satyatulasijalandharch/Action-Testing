@@ -35,8 +35,5 @@ jobs:
         uses: ./
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          debug: true
-
-      # - name: Print Output
-      #   id: output
-      #   run: echo "${{ steps.test-action.outputs.time }}"
+          WEBHOOK_URI: ${{ secrets.WEBHOOK_URI }}
+          DEBUG: true
