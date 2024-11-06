@@ -4,7 +4,7 @@
   "description": "Tesing of the Actions Locally",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx ncc build src/index.js -o dist --source-map --license licenses.txt"
   },
   "author": "Satya Tulasi Jalandhar C H",
   "license": "MIT",
