@@ -1,13 +1,27 @@
 {
-  "name": "action.testing",
+  "name": "microsoft-teams-notification",
   "version": "1.0.0",
-  "description": "Tesing of the Actions Locally",
-  "main": "src/index.js",
+  "description": "Microsoft Teams Notification Action",
+  "main": "dist/index.js",
   "scripts": {
     "build": "npx ncc build src/index.js -o dist --source-map --license licenses.txt"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tezhire-labs/microsoft-teams-notification.git"
+  },
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "microsoft-teams-notification",
+    "MICROSOFT-TEAMS-NOTIFICATION"
+  ],
   "author": "Satya Tulasi Jalandhar C H",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tezhire-labs/microsoft-teams-notification/issues"
+  },
+  "homepage": "https://github.com/tezhire-labs/microsoft-teams-notification#readme",
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
