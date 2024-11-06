@@ -1,0 +1,19 @@
+name: 'Action Test'
+description: 'Tesing the action'
+author: 'Satya Tulasi Jalandhar C H'
+
+# Define your inputs here.
+inputs:
+  milliseconds:
+    description: 'Provide the milliseconds to wait'
+    required: true
+    default: '1000'
+
+# Define your outputs here.
+outputs:
+  time:
+    description: 'Your output description here'
+
+runs:
+  using: node20
+  main: dist/index.js
