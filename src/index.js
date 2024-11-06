@@ -1,4 +1,4 @@
-const core = require('@actions/core')
+const { info, setFailed, setOutput, getInput } = require('@actions/core')
 const github = require('@actions/github')
 const { Octokit } = require('@octokit/rest')
 /**
@@ -7,7 +7,7 @@ const { Octokit } = require('@octokit/rest')
  */
 async function run() {
   try {
-    const githubToken = core.getInput('GITHUB_TOKEN', { required: true })
+    const githubToken = getInput('GITHUB_TOKEN', { required: true })
     const octokit = new Octokit({ auth: githubToken });
 
     const workflowRun = await octokit.rest.actions.getWorkflowRun({
@@ -28,11 +28,11 @@ async function run() {
     console.log("Author:", WorkflowRun.head_commit.author.name)
     console.log("Repository Name:", WorkflowRun.head_repository.full_name)
     console.log("Review Commit URL:", commitMessage)
-    console.log("Commit Message:", WorkflowRun.head_commit.message)
+    info("Commit Message:", WorkflowRun.head_commit.message)
 
-    // core.setOutput('github-token', githubToken)
+    setOutput('CommitMessage', commitMessage)
   } catch (error) {
-    core.setFailed(error.message)
+    setFailed(error.message)
   }
 }
 

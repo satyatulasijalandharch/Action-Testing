@@ -11,8 +11,8 @@ inputs:
 
 # Define your outputs here.
 outputs:
-  github-token:
-    description: 'GitHub token'
+  CommitMessage:
+    description: 'Commit Message'
 
 runs:
   using: node20
