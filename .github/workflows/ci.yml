@@ -35,6 +35,7 @@ jobs:
         uses: ./
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          debug: true
 
       # - name: Print Output
       #   id: output
