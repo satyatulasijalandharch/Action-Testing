@@ -28,7 +28,7 @@ async function run() {
     console.log("Author:", WorkflowRun.head_commit.author.name)
     console.log("Repository Name:", WorkflowRun.head_repository.full_name)
     console.log("Review Commit URL:", commitMessage)
-    info("Commit Message:", WorkflowRun.head_commit.message)
+    console.log("Commit Message:", WorkflowRun.head_commit.message)
 
     setOutput('CommitMessage', commitMessage)
   } catch (error) {

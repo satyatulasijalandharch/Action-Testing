@@ -10,13 +10,25 @@ permissions:
 
 jobs:
   test-action:
-    name: GitHub Actions Test
+    name: Test Action
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+
+      - name: Install and Build
+        run: |
+          npm ci
+          npm run build
+
 
       - name: Test Local Action
         id: test-action
