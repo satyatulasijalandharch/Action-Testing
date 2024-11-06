@@ -29,6 +29,7 @@ async function run() {
     console.log("Repository Name:", WorkflowRun.head_repository.full_name)
     console.log("Review Commit URL:", commitMessage)
     console.log("Commit Message:", WorkflowRun.head_commit.message)
+    info(`Commit Message: ${WorkflowRun.head_commit.message}`)
 
     setOutput('CommitMessage', commitMessage)
     return commitMessage
