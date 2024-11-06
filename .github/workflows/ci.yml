@@ -27,7 +27,7 @@ jobs:
           DEBUG: true
 
       - name: Test Online Action
-        uses: satyatulasijalandharch/Action-Testing@main
+        uses: tezhire-labs/microsoft-teams-notification@main
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WEBHOOK_URI: ${{ secrets.WEBHOOK_URI }}
