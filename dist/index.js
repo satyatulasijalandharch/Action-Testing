@@ -29931,7 +29931,7 @@ async function run() {
     const WorkflowRun = workflowRun.data;
     const commitMessage = WorkflowRun.head_repository.html_url+"/commit/"+WorkflowRun.head_sha
 
-    console.log("Workflow Run Data:", WorkflowRun)
+    // console.log("Workflow Run Data:", WorkflowRun)
     console.log("Workflow Name:", WorkflowRun.name)
     console.log("Event:", WorkflowRun.event.toUpperCase())
     console.log("Status:", WorkflowRun.status.toUpperCase())
