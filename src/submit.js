@@ -6,19 +6,20 @@ const { REQUIRED_INPUTS } = require("./constants");
 const submitNotification = async () => {
   try {
     const webhookBody = JSON.stringify(await getMessage());
-    if (!webhookUrl) {
-      throw new Error("WEBHOOK_URI is required but not provided");
-    }
     const isDebug =
       getInput("DEBUG", { required: REQUIRED_INPUTS.DEBUG }) === "true";
 
     isDebug &&
       console.log(`Final webhook body before submission: ${webhookBody}`);
 
-    const response = await fetch(
-      getInput("WEBHOOK_URI", { required: REQUIRED_INPUTS.WEBHOOK_URI }),
-      {
-        method: "POST",
+    const webhookUrl = getInput("WEBHOOK_URI", { required: REQUIRED_INPUTS.WEBHOOK_URI });
+    
+    if (!webhookUrl) {
+      throw new Error("WEBHOOK_URI is required but not provided");
+    }
+
+    const response = await fetch(webhookUrl, {
+      method: "POST",
         headers: { "Content-Type": "application/json" },
         body: webhookBody,
       }

@@ -34677,26 +34677,27 @@ function wrappy (fn, cb) {
 /***/ ((module) => {
 
 const STATUS_COLORS = {
-  success: '00FF00',
-  failure: 'FF0000',
-  failed: 'FF0000',
-  timed_out: 'FF0000',
-  cancelled: 'FFA500',
-  skipped: 'FFA500',
-  action_required: '0000FF',
-  default: '808080'
+  success: "00FF00",
+  failure: "FF0000",
+  failed: "FF0000",
+  timed_out: "FF0000",
+  cancelled: "FFA500",
+  skipped: "FFA500",
+  action_required: "0000FF",
+  default: "808080",
 };
 
 const REQUIRED_INPUTS = {
   GITHUB_TOKEN: true,
   WEBHOOK_URI: true,
-  DEBUG: false
+  DEBUG: false,
 };
 
 module.exports = {
   STATUS_COLORS,
-  REQUIRED_INPUTS
-}; 
+  REQUIRED_INPUTS,
+};
+
 
 /***/ }),
 
@@ -34707,9 +34708,13 @@ const { setFailed } = __nccwpck_require__(7484);
 
 module.exports.run = async () => {
   try {
+    console.log('Starting submission process...');
     await __nccwpck_require__(6437)();
-  } catch ({ message }) {
-    setFailed(message);
+    console.log('Submission completed successfully');
+    return;
+  } catch (error) {
+    console.error('Error during submission:', error);
+    setFailed(error.message);
   }
 };
 
@@ -34727,14 +34732,15 @@ const { createMessageCard } = __nccwpck_require__(5804);
 
 const getMessage = async () => {
   try {
-    const { data: run } = await new Octokit({ 
-      auth: getInput("GITHUB_TOKEN", { required: true }) 
+    const { data: run } = await new Octokit({
+      auth: getInput("GITHUB_TOKEN", { required: true }),
     }).rest.actions.getWorkflowRun({
       ...context.repo,
       run_id: context.runId,
     });
 
-    const themeColor = STATUS_COLORS[run.conclusion?.toLowerCase()] || STATUS_COLORS.default;
+    const themeColor =
+      STATUS_COLORS[run.conclusion?.toLowerCase()] || STATUS_COLORS.default;
     return createMessageCard(run, themeColor);
   } catch (error) {
     console.error("Error in getMessage:", error);
@@ -34759,21 +34765,27 @@ const { REQUIRED_INPUTS } = __nccwpck_require__(9992);
 const submitNotification = async () => {
   try {
     const webhookBody = JSON.stringify(await getMessage());
-    const isDebug = getInput("DEBUG", { required: REQUIRED_INPUTS.DEBUG }) === "true";
-    
-    isDebug && console.log(`Final webhook body before submission: ${webhookBody}`);
+    const isDebug =
+      getInput("DEBUG", { required: REQUIRED_INPUTS.DEBUG }) === "true";
 
-    const response = await fetch(
-      getInput("WEBHOOK_URI", { required: REQUIRED_INPUTS.WEBHOOK_URI }), 
-      {
-        method: "POST",
+    isDebug &&
+      console.log(`Final webhook body before submission: ${webhookBody}`);
+
+    const webhookUrl = getInput("WEBHOOK_URI", { required: REQUIRED_INPUTS.WEBHOOK_URI });
+    
+    if (!webhookUrl) {
+      throw new Error("WEBHOOK_URI is required but not provided");
+    }
+
+    const response = await fetch(webhookUrl, {
+      method: "POST",
         headers: { "Content-Type": "application/json" },
         body: webhookBody,
       }
     );
 
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    
+
     info("Webhook submitted successfully");
     return response;
   } catch (error) {
@@ -34797,23 +34809,25 @@ const createFacts = ({ head_commit, event, head_branch, status }) => [
   { name: "Event:", value: `\`${event.toUpperCase()}\`` },
   { name: "Branch:", value: `\`${head_branch.toUpperCase()}\`` },
   { name: "Status:", value: `\`${status.toUpperCase()}\`` },
-  { name: "Commit:", value: head_commit.message }
+  { name: "Commit:", value: head_commit.message },
 ];
 
 const createActions = ({ html_url, head_repository, head_sha }) => [
   {
     "@type": "OpenUri",
     name: "View Workflow",
-    targets: [{ os: "default", uri: html_url }]
+    targets: [{ os: "default", uri: html_url }],
   },
   {
     "@type": "OpenUri",
     name: "View Commit",
-    targets: [{ 
-      os: "default", 
-      uri: `${head_repository.html_url}/commit/${head_sha}`
-    }]
-  }
+    targets: [
+      {
+        os: "default",
+        uri: `${head_repository.html_url}/commit/${head_sha}`,
+      },
+    ],
+  },
 ];
 
 const createMessageCard = (run, themeColor) => ({
@@ -34821,20 +34835,23 @@ const createMessageCard = (run, themeColor) => ({
   "@context": "http://schema.org/extensions",
   themeColor,
   summary: `${run.name} ${run.conclusion}`,
-  sections: [{
-    activityTitle: run.name,
-    activitySubtitle: `${run.head_repository.full_name} [#${run.run_number}](${run.html_url})`,
-    activityImage: run.actor.avatar_url,
-    facts: createFacts(run),
-    potentialAction: createActions(run)
-  }]
+  sections: [
+    {
+      activityTitle: run.name,
+      activitySubtitle: `${run.head_repository.full_name} [#${run.run_number}](${run.html_url})`,
+      activityImage: run.actor.avatar_url,
+      facts: createFacts(run),
+      potentialAction: createActions(run),
+    },
+  ],
 });
 
 module.exports = {
   createFacts,
   createActions,
-  createMessageCard
-}; 
+  createMessageCard,
+};
+
 
 /***/ }),
 

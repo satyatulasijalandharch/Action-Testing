@@ -18,21 +18,16 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-          cache: 'npm'
-
-      - name: Install and Build
-        run: |
-          npm ci
-          npm run build
-
-
       - name: Test Local Action
         id: test-action
         uses: ./
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WEBHOOK_URI: ${{ secrets.WEBHOOK_URI }}
+          DEBUG: true
+
+      - name: Test Online Action
+        uses: satyatulasijalandharch/Action-Testing@main
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WEBHOOK_URI: ${{ secrets.WEBHOOK_URI }}
